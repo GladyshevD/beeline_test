@@ -1,7 +1,9 @@
+package ru.beeline.geo.service;
+
 import ru.beeline.geo.model.SalesPointDo;
 
+import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -23,6 +25,6 @@ public class SalesPointsTestData {
     public static final SalesPointDo POINT7 = new SalesPointDo(START_ID + 5,
             "Собственный офис Билайн", "Волгоград", "улица Коммунистическая, 12");
 
-    Map<String, SalesPointDo> salesPointsByCity = Stream.of(POINT1, POINT2, POINT3, POINT4, POINT5, POINT6, POINT7)
-            .collect(Collectors.toMap(SalesPointDo::getCity, Function.identity()));
+    public static final Map<String, List<SalesPointDo>> salesPointsByCity = Stream.of(POINT1, POINT2, POINT3, POINT4, POINT5, POINT6, POINT7)
+            .collect(Collectors.groupingBy(SalesPointDo::getCity, Collectors.toList()));
 }

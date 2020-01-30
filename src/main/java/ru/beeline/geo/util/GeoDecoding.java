@@ -1,6 +1,8 @@
 package ru.beeline.geo.util;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+import ru.beeline.geo.util.exception.NotPointsFoundException;
 import ru.beeline.geo.util.exception.UrlFormingException;
 
 import java.io.IOException;
@@ -46,16 +48,23 @@ public class GeoDecoding {
             }
             scanner.close();
         } catch (IOException e) {
-            throw new UrlFormingException();
+            throw new UrlFormingException("Внутренняя ошибка сервера. Обратитесь в службу поддержки");
         }
 
         JSONObject obj = new JSONObject(str.toString());
 
-        return obj.getJSONObject("response")
-                .getJSONObject("GeoObjectCollection")
-                .getJSONArray("featureMember")
-                .getJSONObject(0)
-                .getJSONObject("GeoObject")
-                .getString("name");
+        String responseCity;
+        try {
+            responseCity = obj.getJSONObject("response")
+                    .getJSONObject("GeoObjectCollection")
+                    .getJSONArray("featureMember")
+                    .getJSONObject(0)
+                    .getJSONObject("GeoObject")
+                    .getString("name");
+        } catch (JSONException e) {
+            throw new NotPointsFoundException("Не удалось найти торговые точки для данного города");
+        }
+
+        return responseCity;
     }
 }

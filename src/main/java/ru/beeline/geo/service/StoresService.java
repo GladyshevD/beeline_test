@@ -4,7 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.beeline.geo.model.SalesPointDo;
 import ru.beeline.geo.repository.SalesPointsRepository;
-import ru.beeline.geo.util.exception.IPHandlerException;
+import ru.beeline.geo.util.exception.IPFindingException;
+import ru.beeline.geo.util.exception.NotPointsFoundException;
 import ru.beeline.geo.util.exception.UrlFormingException;
 
 import java.util.List;
@@ -22,8 +23,8 @@ public class StoresService {
         this.repository = repository;
     }
 
-    public List<SalesPointDo> getPoints(double latitude, double longitude, String remoteAddr)
-            throws UrlFormingException, IPHandlerException {
+    public List<SalesPointDo> getPoints(Double latitude, Double longitude, String remoteAddr)
+            throws UrlFormingException, IPFindingException {
         String city;
         if (checkCoordinates(latitude, longitude)) {
             city = getDataBaseCity(remoteAddr);
@@ -31,10 +32,18 @@ public class StoresService {
             city = getCity(latitude, longitude);
         }
 
-        return repository.getSalesPointDosByCity(city);
+        return checkFound(repository.getSalesPointDosByCity(city));
     }
 
     private boolean checkCoordinates(Double latitude, Double longitude) {
         return latitude == null || longitude == null || (latitude == 0 && longitude == 0);
+    }
+
+    private List<SalesPointDo> checkFound(List<SalesPointDo> salesPointDos) {
+        if (salesPointDos.size() == 0) {
+            throw new NotPointsFoundException("Не удалось найти торговые точки для данного города");
+        } else {
+            return salesPointDos;
+        }
     }
 }

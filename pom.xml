@@ -18,7 +18,7 @@
         <json.version>20190722</json.version>
         <resteasy-jaxrs.version>3.10.0.Final</resteasy-jaxrs.version>
         <!--Spring-->
-        <spring.version>5.2.3.RELEASE</spring.version>
+        <spring.version>5.2.9.RELEASE</spring.version>
         <spring-data-jpa.version>2.2.0.RELEASE</spring-data-jpa.version>
         <!--DB-->
         <postgresql.version>42.2.8</postgresql.version>
